@@ -110,10 +110,10 @@ export const Input = forwardRef(
             onPress={() => setHidePassword(!hidePassword)}
           >
             {hidePassword && (
-              <Eye color={constants.colors.secondary} size={24} />
+              <Eye color={constants.colors.primary} size={24} />
             )}
             {!hidePassword && (
-              <EyeOff color={constants.colors.secondary} size={24} />
+              <EyeOff color={constants.colors.primary} size={24} />
             )}
           </TouchableOpacity>
         )}
@@ -131,7 +131,7 @@ const makeStyle = (fontScale: number, error: boolean) =>
     },
     label: {
       fontSize: 14 / fontScale,
-      color: error ? constants.colors.danger : constants.colors.secondary,
+      color: error ? constants.colors.danger : constants.colors.primary,
     },
     input: {
       backgroundColor: constants.colors.white,

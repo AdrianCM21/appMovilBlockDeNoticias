@@ -8,6 +8,7 @@ import { Input } from '../../components/Input';
 import { CaretDown } from '../../components/Icon/CaretDown';
 import { constants } from '../../styles/constants';
 import { NextStep } from '../../components/Icon/NextStep';
+import { useNoticia } from '../../hooks/noticias';
 type Props = NativeStackScreenProps<StackParamList, 'VerPosts'>;
 
 const comentarios = [
@@ -16,6 +17,7 @@ const comentarios = [
 ]
 export const VerPosts: any = ({ navigation, route }: Props) => {
   const post = route.params.post;
+  const { algo } = useNoticia()
 
 
 

@@ -1,10 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import noticiasSlice from './noticias';
-
+import authSlice from './authSlice';
 
 export const store = configureStore({
   reducer: {
-    noticias: noticiasSlice
+    noticias: noticiasSlice,
+    auth: authSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

@@ -10,6 +10,10 @@
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
+    },  
+    "extra": {
+      "apiUrl": "http://192.168.109.72:8000/api",
+      "otherKey": "value"
     },
     "assetBundlePatterns": [
       "**/*"
