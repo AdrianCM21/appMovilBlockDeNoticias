@@ -20,9 +20,14 @@ export const VerPosts: any = ({ navigation, route }: Props) => {
   const alert = useAlert()
 
   const handleSendComenario = async () => {
-    await sendComentario(post.id, comentarioText)
+    const response = await sendComentario(post.id, comentarioText)
+    if (response) {
+      alert('success', 'Su cometario a sido publicado con exito, aparecera cuando un administrador lo apurebe ')
+    } else {
+      alert('danger', 'No se puedo publicar su comenario reintentelo mas tarde, Internal error ')
+    }
     setComentarioText('')
-    alert('success', 'Su cometario a sido publicado con exito, aparecera cuando un administrador lo apurebe ')
+
   }
 
   return (

@@ -60,7 +60,7 @@ export const Router = () => {
                       onPress={logout}
 
                       color={constants.colors.primary}
-                    ><Text style={{ color: constants.colors.white }}>Cerrar secion</Text></Button>
+                    ><Text style={{ color: constants.colors.white }}>Cerrar sesion</Text></Button>
                   ) : null
                 ),
               })}
