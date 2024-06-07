@@ -22,15 +22,24 @@ export const Api = Axios.create({
   timeout: 40000,
 });
 
-// Api.interceptors.request.use((config) => {
-//   const state = store.getState();
-//   if (state.auth.accessToken && config.headers) {
-//     config.headers.Authorization = `Bearer ${state.auth.accessToken}`;
-//   }
-//   return config;
-// });
+Api.interceptors.request.use(async (config) => {
+  try {
+
+    const state = store.getState().auth.user
+    if (state) {
+      Api.defaults.headers.common['session'] = JSON.stringify(state);
+    }
+
+    return config;
+  } catch (error) {
+    console.log(error)
+    return config;
+  }
+
+});
 
 Api.interceptors.response.use(
+
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {

@@ -1,6 +1,7 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { constants } from '../styles/constants'
+import { useNoticia } from '../hooks/noticias'
 
 export interface Comentario {
   nombre: string,
@@ -12,6 +13,7 @@ interface ComentarioProps {
 }
 
 export const Comentario = ({ comentario }: ComentarioProps) => {
+
   return (
     <View style={styles.comentarios}>
       <View>

@@ -1,7 +1,7 @@
 
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React from 'react'
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native'
+import React, { useState } from 'react'
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { StackParamList } from '../../Router';
 import { Comentario } from '../../components/Comentario';
 import { Input } from '../../components/Input';
@@ -9,17 +9,21 @@ import { CaretDown } from '../../components/Icon/CaretDown';
 import { constants } from '../../styles/constants';
 import { NextStep } from '../../components/Icon/NextStep';
 import { useNoticia } from '../../hooks/noticias';
+import { useAlert } from '../../hooks/alert';
 type Props = NativeStackScreenProps<StackParamList, 'VerPosts'>;
 
-const comentarios = [
-  { nombre: 'Dany', comentario: 'me parece bien ' },
-  { nombre: 'Sany', comentario: 'me parece bien ' }
-]
+
 export const VerPosts: any = ({ navigation, route }: Props) => {
   const post = route.params.post;
-  const { algo } = useNoticia()
+  const { sendComentario } = useNoticia()
+  const [comentarioText, setComentarioText] = useState<string>('')
+  const alert = useAlert()
 
-
+  const handleSendComenario = async () => {
+    await sendComentario(post.id, comentarioText)
+    setComentarioText('')
+    alert('success', 'Su cometario a sido publicado con exito, aparecera cuando un administrador lo apurebe ')
+  }
 
   return (
     <ScrollView style={{ flex: 1 }}>
@@ -28,27 +32,38 @@ export const VerPosts: any = ({ navigation, route }: Props) => {
         <View style={styles.postContainer}>
           <Image source={{ uri: post.imagen }} style={styles.postImage} />
           <Text style={styles.postTitle}>{post.titulo}</Text>
-          <Text style={styles.postDetails}>{post.fecha} | {post.autor}</Text>
+          <Text style={styles.postDetails}>{post.fecha} | {post.autor.usuario}</Text>
           <Text style={styles.postContent}>{post.contenido}</Text>
-          <Text style={styles.postGroup}>Grupo: {post.grupo}</Text>
+          <Text style={styles.postGroup}>Grupo: {post.grupo.grupo}</Text>
         </View>
         <View style={styles.comentariosContainer}>
-          <Text style={styles.comentariosTitle}>Comentarios: {comentarios.length}</Text>
+          <Text style={styles.comentariosTitle}>Comentarios: {post.comentarios.length}</Text>
           <View style={styles.inputContainer}>
-            <Input />
-            <NextStep
-              color={constants.colors.primary}
-              size={40}
-              style={styles.NextStep}
+            <Input
+              onChangeText={(text: any) => {
+                setComentarioText(text);
+              }}
+              value={comentarioText ? comentarioText : ''}
+
             />
+            <TouchableOpacity
+              onPress={handleSendComenario}
+            >
+              <NextStep
+                color={constants.colors.primary}
+                size={40}
+                style={styles.NextStep}
+              />
+            </TouchableOpacity>
+
           </View>
 
           <View >
 
-            {comentarios.map((comentario, index) => (
+            {post.comentarios.map((comentario, index) => (
               <Comentario key={index} comentario={comentario} />
             )
-            )}
+            ).reverse()}
 
 
           </View>
@@ -64,7 +79,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     // height: '100%',
     // justifyContent: 'flex-start',
-    alignItems: 'center',
+    // alignItems: 'center',
     backgroundColor: '#fff',
   },
   postContainer: {
@@ -87,7 +102,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   postTitle: {
-    fontSize: 18,
+    fontSize: 28,
     fontWeight: 'bold',
     marginTop: 10,
   },
@@ -109,6 +124,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
     marginTop: 10,
+    color: constants.colors.primary
   },
   comentariosContainer: {
     width: '100%',

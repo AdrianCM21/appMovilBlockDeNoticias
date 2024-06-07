@@ -17,6 +17,14 @@ export const NoticiasService = {
     return response.data;
   },
 
+  sendNoticia: async (id_noticia: string, comentario: string) => {
+    const response = await Api.post('/comentarios', {
+      id_noticia,
+      comentario
+    });
+    return response.data;
+  },
+
 
 };
 

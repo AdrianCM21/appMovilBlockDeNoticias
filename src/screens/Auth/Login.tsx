@@ -26,6 +26,8 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { StackParamList } from '../../Router';
 
 import { useSession } from '../../hooks/session'
+import { useAlert } from '../../hooks/alert';
+import { AxiosError } from 'axios';
 
 
 type Props = NativeStackScreenProps<StackParamList, 'Login'>;
@@ -35,7 +37,7 @@ export const Login = ({ navigation }: Props) => {
   const [shownScollIndicator, setShownScollIndicator] = useState(true);
   const [loading, setLoading] = useState(false);
   const scrollView = useRef<EnchancedScrollViewRef>(null);
-
+  const alert = useAlert()
 
   const [usuario, setUsuario] = useState('');
   const [password, setPassword] = useState('');
@@ -57,14 +59,27 @@ export const Login = ({ navigation }: Props) => {
     session
       .login(usuario, password)
       .then((r) => {
+        console.log(r)
         setLoading(false);
-        navigation.navigate('HomePage', {});
+        // navigation.navigate('HomePage', {});
       })
-      .catch((err: any) => {
-        setLoading(false)
-        console.error(err)
-      }
-      );
+      .catch((err) => {
+        if (err instanceof AxiosError) {
+          console.error('Error de Axios:', err.response?.data);
+          if (err.response?.data?.error) {
+            alert('danger', err.response?.data?.error);
+          } else {
+            alert('danger', 'Error de conexión. Inténtalo de nuevo más tarde.');
+          }
+
+        } else {
+
+          console.error('Error:', err);
+          alert('danger', 'No se pudo iniciar sesión.');
+        }
+        setLoading(false);
+      });
+
   };
   return (
     <KeyboardAvoidingView

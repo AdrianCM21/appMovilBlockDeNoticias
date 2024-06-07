@@ -18,7 +18,7 @@ export const useSession = () => {
       if (sessionString) {
         const session = JSON.parse(sessionString);
         dispatch(login({ user: session.user_data }));
-
+        Api.defaults.headers.common['session'] = JSON.stringify(session.user_data);
       }
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
@@ -32,7 +32,7 @@ export const useSession = () => {
     try {
 
       const response = await AuthService.login(usuario, password);
-
+      console.log(response)
       Api.defaults.headers.common['session'] = JSON.stringify(response.user_data);
       await AsyncStorage.setItem('session', JSON.stringify(response));
       dispatch(login({ user: response.user_data }));

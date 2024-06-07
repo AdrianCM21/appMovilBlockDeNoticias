@@ -11,6 +11,7 @@ import { Text } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 
+
 export type StackParamList = {
   HomePage: {};
   VerPosts: { post: Post };

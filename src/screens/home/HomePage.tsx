@@ -3,55 +3,38 @@ import { View, Text, Image, ScrollView, StyleSheet, Dimensions, TouchableOpacity
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { StackParamList } from '../../Router';
+import { useNoticia } from '../../hooks/noticias';
+import { constants } from '../../styles/constants';
 
 
 export interface Post {
+  id: string,
   titulo: string;
   fecha: string;
   contenido: string;
   imagen: string;
   subtitulo: string;
-  autor: string;
-  grupo: string;
+  autor: {
+    usuario: string
+  };
+  grupo: {
+    grupo: string
+  },
+  comentarios: {
+    nombre: string,
+    comentario: string,
+    fecha: string
+  }[]
 }
 
 export const HomePage: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
 
-  const [posts, setPosts] = useState<Post[]>([
-    {
-      titulo: "Exploración del Espacio: El Futuro de la Humanidad",
-      fecha: "2024-05-31",
-      contenido: "La exploración espacial está avanzando rápidamente con nuevas misiones a Marte y más allá. En este artículo, exploramos las últimas innovaciones y descubrimientos en el campo de la astronáutica.",
-      imagen: "https://example.com/images/space-exploration.jpg",
-      subtitulo: "Nuevas Fronteras en el Universo",
-      autor: "Dr. Jane Smith",
-      grupo: "Ciencia y Tecnología"
-    },
-    {
-      titulo: "Exploración del Espacio: El Futuro de la Humanidad",
-      fecha: "2024-05-31",
-      contenido: "La exploración espacial está avanzando rápidamente con nuevas misiones a Marte y más allá. En este artículo, exploramos las últimas innovaciones y descubrimientos en el campo de la astronáutica.",
-      imagen: "https://example.com/images/space-exploration.jpg",
-      subtitulo: "Nuevas Fronteras en el Universo",
-      autor: "Dr. Jane Smith",
-      grupo: "Ciencia y Tecnología"
-    }
-    , {
-      titulo: "Exploración del Espacio: El Futuro de la Humanidad",
-      fecha: "2024-05-31",
-      contenido: "La exploración espacial está avanzando rápidamente con nuevas misiones a Marte y más allá. En este artículo, exploramos las últimas innovaciones y descubrimientos en el campo de la astronáutica.",
-      imagen: "https://example.com/images/space-exploration.jpg",
-      subtitulo: "Nuevas Fronteras en el Universo",
-      autor: "Dr. Jane Smith",
-      grupo: "Ciencia y Tecnología"
-    }
-    // Puedes agregar más posts aquí
-  ]);
+  const { noticias, loading } = useNoticia()
 
   return (
     <ScrollView style={styles.container}>
-      {posts.map((post, index) => (
+      {!loading && noticias && noticias.length > 0 && noticias.map((post, index) => (
         <TouchableOpacity
           key={index}
           onPress={() => {
@@ -61,12 +44,19 @@ export const HomePage: React.FC = () => {
           <View style={styles.postContainer}>
             <Image source={{ uri: post.imagen }} style={styles.postImage} />
             <Text style={styles.postTitle}>{post.titulo}</Text>
-            <Text style={styles.postDetails}>{post.fecha} | {post.autor}</Text>
+            <Text style={styles.postDetails}>{post.fecha} | {post.autor.usuario}</Text>
             <Text style={styles.postContent}>{post.contenido}</Text>
-            <Text style={styles.postGroup}>Grupo: {post.grupo}</Text>
+            <Text style={styles.postGroup}>Grupo: {post.grupo.grupo}</Text>
           </View>
         </TouchableOpacity>
       ))}
+      {
+        (!noticias || noticias.length) && (
+          <View style={styles.noHayDatosContainer}>
+            <Text style={styles.noHayDatosText}>No hay noticias para mostrar</Text>
+          </View>
+        )
+      }
     </ScrollView>
   );
 };
@@ -75,6 +65,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f0f0f0',
+  },
+  noHayDatosContainer: {
+    flex: 1,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: Dimensions.get('screen').height,
+
+  },
+  noHayDatosText: {
+    color: constants.colors.primary,
+    fontWeight: 'bold',
+    fontSize: 23
+
   },
   postContainer: {
     backgroundColor: '#fff',
